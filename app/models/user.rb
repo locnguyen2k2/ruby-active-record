@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  include Number
+  include Invoice
 
   has_many :wallets, class_name: "Wallet", before_add: :before_add_callback, dependent: :destroy
   belongs_to :role, class_name: "Role"
@@ -11,6 +11,8 @@ class User < ApplicationRecord
   scope :by_id, ->(id) { find(id) if id.present? }
   scope :is_actived, -> {  where(status: "actived") }
   scope :is_unactived, Proc.new { where(status: "unactive") }
+  scope :raw_find_by_id, Proc.new {  "SELECT * FROM users WHERE enable = 1 " }
+  # ActiveRecord::Base.connection.exec_query -> ActiveRecord::Result(object)
   # scope :available_role_by_slug, ->(slug) { where(slug: slug, enable: true)  }
 
   validates :password, presence: true, on: :create
@@ -55,23 +57,48 @@ class User < ApplicationRecord
   after_rollback :after_rollback_callback
   after_commit :after_commit_callback
 
-  def self.do_something
+  # def total_
+
+  def greeting
+    puts "Good morning"
+    super
+  end
+
+  def self.do_something_with_second_yied(&block)
+    puts "The second yield is starting ... #{oke}"
+    block.call
+  end
+
+  def self.do_something_with_yied
+    return "Block not given" unless block_given?
     puts "Yield is starting ..."
     yield "Steven"
+    self.do_something_with_second_yied do yield "Cjool" end
     puts "Yield is completed"
   end
 
+  def self.do_something_with_block(&block)
+    puts "Block is starting ..."
+    block.call "Steven" => "1", "2" => "3"
+    # block.call "Cjool"
+    puts "Block is completed"
+  end
+
   def self.with_lambda
-    lamb = ->(name) { puts "My name is #{name}"; nil }
-    self.do_something &lamb
+    lamb = ->(**name) {
+      name.map do |label, val|
+        puts "My name is #{label} - age #{val}"; nil
+      end
+     }
+    self.do_something_with_block lamb.call
   end
 
   def self.with_proc
     proc = Proc.new do |name|
       puts "My name is #{name}"
-        return
+       # return
      end
-    self.do_something &proc
+    self.do_something_with_yied &proc
   end
 
   def self.status(id)

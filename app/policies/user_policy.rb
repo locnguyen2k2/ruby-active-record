@@ -3,11 +3,13 @@ class UserPolicy < ApplicationPolicy
       attr_reader :user, :scope
 
       def initialize(user, scope)
+        raise Errors::UnauthorizedException unless user
         @user = user
         @scope = scope
       end
 
       def resolve
+        puts "User: ", user.email, user.role.slug
         if user.role&.slug == RoleData::ADMIN
           scope.all
         else

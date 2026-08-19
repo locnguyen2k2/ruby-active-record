@@ -5,4 +5,5 @@ module MessageData
   UNAUTHORIZED = { message: "Unauthorized", status: :unauthorized }
   REQUEST_FAILED = { message: "Request failed", status: :request_failed }
   ACCESS_DENIED = { message: "Access denied", status: 403 }
+  TOO_MANY_REQUEST = { message: "Too many request", status: 403 }
 end

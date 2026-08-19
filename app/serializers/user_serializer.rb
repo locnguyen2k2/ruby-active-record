@@ -24,7 +24,7 @@
 
     private
     def include
-      scope[:include]
+      scope && scope[:include]
     end
 
     def roles

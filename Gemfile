@@ -1,5 +1,14 @@
 source "https://rubygems.org"
 
+# CORS
+gem "rack-cors"
+
+# Redis gems
+gem "redis"
+gem "connection_pool"
+gem "hiredis-client"
+gem "redis-session-store"
+
 gem "sqlite_crypto"
 gem "active_model_serializers"
 gem "uuid"
@@ -46,6 +55,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 group :development, :test do
+  gem "rspec-rails"
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 

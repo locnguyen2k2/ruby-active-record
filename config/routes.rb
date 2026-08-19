@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
-  resources :user, path: "users" do
-    collection do
-      get :profile
-    end
-  end
+  resources :user, path: "users"
   resources :wallet, path: "wallets"
   resources :balance, path: "balances"
   resources :role, path: "roles"
@@ -20,6 +16,7 @@ Rails.application.routes.draw do
   get "/login", to: "session#new"
   post "/login", to: "session#create"
   post "/logout", to: "session#destroy"
+  get "/profile", to: "user#profile"
   # Defines the root path route ("/")
   # root "posts#index"
   root to: "application#cookie"

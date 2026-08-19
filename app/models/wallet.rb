@@ -1,4 +1,5 @@
 class Wallet < ApplicationRecord
+  include Asset
   belongs_to :user
   has_many :balances, class_name: "Balance"
 
