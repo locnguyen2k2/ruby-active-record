@@ -9,11 +9,16 @@ class UserController < ApplicationController
     def index
       if logged_in?
         reviews = policy_scope(User)
-        puts "Reviews: ", reviews
         users = reviews
         role_ids = users.pluck(:role_id)
         roles = Role.where("id IN (?)", role_ids)
-        render json: users, scope: { roles: roles }
+        paginated = RailsCursorPagination::Paginator.new(users).fetch
+        page = paginated[:page]
+        users = page.map { |data| data[:data] }
+        # puts "User Data", users.as_json
+        # serialized_users =  users.map { |user| UserSerializer.new(user).serializable_hash }
+        # puts "UserSerializer", serialized_users
+        render json: users, scope: { roles: roles, paginated: paginated[:page_info] }
       else
         render json: []
       end
@@ -43,7 +48,7 @@ class UserController < ApplicationController
       user_id = params.require(:id)
       is_existed = UserService.new.by_id(user_id)
       # is_existed = User.eager_load(:wallets, :role).where(id: user_id)
-      @user = is_existed.length > 0 ? is_existed[0] : nil
+      @user = is_existed.length > 0 ? is_existed.first : nil
       raise Errors::RecordNotFoundException.new if @user.nil?
     end
     def user_params

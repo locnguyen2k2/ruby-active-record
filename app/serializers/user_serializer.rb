@@ -1,7 +1,13 @@
   class UserSerializer < ActiveModel::Serializer
     include TimestampSerializer
+    include Responses::Paginator
+
     attributes :id, :full_name,  :role
     attribute :wallets, if: :include_wallets?
+
+    def paginated
+      object.id
+    end
 
     def full_name
       "#{object.first_name} #{object.last_name}"

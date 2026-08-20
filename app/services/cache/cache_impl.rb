@@ -13,7 +13,8 @@ module Cache
     end
 
     def fetch(key, expires_in = 60, &bock)
-      Rails.cache.fetch(key, expires_in: expires_in) do
+      started_at = Time.now.to_f.in_milliseconds.to_i
+      item = Rails.cache.fetch(key, expires_in: expires_in) do
         begin
           yield
         rescue ActiveRecord::RecordNotFound => e
@@ -24,8 +25,9 @@ module Cache
           nil
         end
         ensure
-          # Rails.logger.info("[CACHE] Fetched")
-        end
+      end
+      Rails.logger.info("[CACHE_FETCHED_DURATION] #{(Time.now.to_f.in_milliseconds.to_i - started_at)}ms")
+      item
     end
 
     def set(key, value, expires_in = 60)

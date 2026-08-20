@@ -9,7 +9,6 @@ class UserPolicy < ApplicationPolicy
       end
 
       def resolve
-        puts "User: ", user.email, user.role.slug
         if user.role&.slug == RoleData::ADMIN
           scope.all
         else

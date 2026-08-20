@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
   include SessionHelper
-  include ExceptionResponse
+  include Responses::ExceptionResponse
 
   protect_from_forgery
 

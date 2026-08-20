@@ -3,6 +3,9 @@ source "https://rubygems.org"
 # CORS
 gem "rack-cors"
 
+# Cursor & Pagination
+gem "rails_cursor_pagination"
+
 # Redis gems
 gem "redis"
 gem "connection_pool"

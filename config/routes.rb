@@ -19,5 +19,4 @@ Rails.application.routes.draw do
   get "/profile", to: "user#profile"
   # Defines the root path route ("/")
   # root "posts#index"
-  root to: "application#cookie"
 end
